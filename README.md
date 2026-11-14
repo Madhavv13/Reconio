@@ -2,7 +2,7 @@
 
 Desktop recon for authorized security testing: subfinder → dnsx → httpx per engagement, with scope enforced between every stage. Tauri v2, React + TypeScript, Rust core, SQLite.
 
-Requirements live in [../docs/PRD.md](../docs/PRD.md); the build plan and module progress in [../docs/MVP.md](../docs/MVP.md). UI is built only from [../ui-design-system-glass](../ui-design-system-glass/design-system.md).
+Requirements live in [../docs/PRD.md](../docs/PRD.md); the build plan and module progress in [../docs/MVP.md](../docs/MVP.md); full run, test and build instructions in [../docs/Runner.md](../docs/Runner.md). UI is built only from [../ui-design-system-glass](../ui-design-system-glass/design-system.md).
 
 ## Setup
 
