@@ -55,7 +55,10 @@ export function ToolCheck() {
     };
   }, [check]);
 
-  useEffect(() => logEnd.current?.scrollIntoView({ block: "end" }), [log]);
+  // Braces matter: newer WebView2 returns a Promise from scrollIntoView, and an effect may only return a cleanup function.
+  useEffect(() => {
+    logEnd.current?.scrollIntoView({ block: "end" });
+  }, [log]);
 
   const stream = async (tool: Tool) => {
     const job = await toolVersionStream(tool);

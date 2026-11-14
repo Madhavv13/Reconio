@@ -2,6 +2,7 @@ import { useState, type ReactElement } from "react";
 import { Wrench } from "lucide-react";
 import { Sidebar, type NavItem } from "./shell/Sidebar";
 import { ToolCheck } from "./screens/tools/ToolCheck";
+import { ErrorBoundary } from "./shell/ErrorBoundary";
 
 const NAV: NavItem[] = [{ id: "tools", label: "Tool check", icon: Wrench }];
 
@@ -22,7 +23,7 @@ export default function App() {
         <div className="content no-pipe">
           <div className="scroll">
             <div className="top-space" />
-            {s.render()}
+            <ErrorBoundary key={screen}>{s.render()}</ErrorBoundary>
             <div className="bottom-space" />
           </div>
           <div className="bar float-top">
