@@ -2,11 +2,13 @@ pub mod commands;
 pub mod db;
 pub mod engagements;
 pub mod error;
+pub mod keys;
 pub mod scope;
+pub mod settings;
 pub mod supervisor;
 pub mod tools;
 
-use commands::{engagement, scope as scope_cmd, tools as tool_cmd, AppState};
+use commands::{engagement, scope as scope_cmd, settings as settings_cmd, tools as tool_cmd, AppState};
 use std::sync::Mutex;
 use tauri::Manager;
 
@@ -42,7 +44,15 @@ pub fn run() {
             scope_cmd::scope_apply,
             scope_cmd::scope_delete,
             scope_cmd::scope_test,
-            scope_cmd::scope_import
+            scope_cmd::scope_import,
+            settings_cmd::settings_get,
+            settings_cmd::settings_set,
+            settings_cmd::onboarding_done,
+            settings_cmd::onboarding_complete,
+            settings_cmd::keys_list,
+            settings_cmd::keys_set,
+            settings_cmd::keys_delete,
+            settings_cmd::data_info
         ])
         .run(tauri::generate_context!())
         .expect("error while running Reconio");

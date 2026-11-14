@@ -6,4 +6,8 @@ export type ActiveEngagement = { engagement: Engagement, attestation: Attestatio
 /**
  * The engagement's folder on disk, and its size (Engagement settings, Storage).
  */
-folder: string, size_bytes: number, };
+folder: string, size_bytes: number, 
+/**
+ * Number of scope rules, for the sidebar count.
+ */
+rule_count: number, };

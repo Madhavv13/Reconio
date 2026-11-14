@@ -112,7 +112,7 @@ export function ScopeScreen() {
     try {
       await scopeDelete(r.id);
       setNotice(`${r.normalized} removed.`);
-      await load();
+      await Promise.all([load(), refresh()]);
     } catch (e) {
       setError((e as AppError).message);
     }

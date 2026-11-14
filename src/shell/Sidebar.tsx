@@ -3,10 +3,12 @@ import { Check, ChevronsUpDown, Plus, type LucideIcon } from "lucide-react";
 import mark from "../assets/reconio-mark.svg";
 import { useEngagement } from "../state/engagement";
 
-export type NavItem = { id: string; label: string; icon: LucideIcon } | { group: string };
+export type NavItem = { id: string; label: string; icon: LucideIcon; count?: string } | { group: string };
 
 type Props = {
   items: NavItem[];
+  /** Pinned to the bottom of the sidebar, as in the mockups (Settings). */
+  bottom: NavItem[];
   current: string;
   onSelect: (id: string) => void;
   onNewEngagement: () => void;
@@ -91,7 +93,17 @@ function Switcher({ onNew, onSwitched }: { onNew: () => void; onSwitched: () => 
 }
 
 // Floating glass sidebar (NAV-01).
-export function Sidebar({ items, current, onSelect, onNewEngagement }: Props) {
+function NavButton({ n, current, onSelect }: { n: Exclude<NavItem, { group: string }>; current: string; onSelect: (id: string) => void }) {
+  return (
+    <button type="button" className="nav-item" aria-current={current === n.id ? "page" : undefined} onClick={() => onSelect(n.id)}>
+      <n.icon {...ic} />
+      {n.label}
+      {n.count && <span className="count">{n.count}</span>}
+    </button>
+  );
+}
+
+export function Sidebar({ items, bottom, current, onSelect, onNewEngagement }: Props) {
   return (
     <aside className="sidebar glass" aria-label="Navigation">
       <div className="row" style={{ height: 40, padding: "0 10px", marginBottom: "var(--space-2)" }}>
@@ -102,22 +114,10 @@ export function Sidebar({ items, current, onSelect, onNewEngagement }: Props) {
       </div>
       <Switcher onNew={onNewEngagement} onSwitched={() => {}} />
       {items.map((n) =>
-        "group" in n ? (
-          <div key={n.group} className="nav-label">{n.group}</div>
-        ) : (
-          <button
-            key={n.id}
-            type="button"
-            className="nav-item"
-            aria-current={current === n.id ? "page" : undefined}
-            onClick={() => onSelect(n.id)}
-          >
-            <n.icon {...ic} />
-            {n.label}
-          </button>
-        ),
+        "group" in n ? <div key={n.group} className="nav-label">{n.group}</div> : <NavButton key={n.id} n={n} current={current} onSelect={onSelect} />,
       )}
       <div className="spacer" />
+      {bottom.map((n) => ("group" in n ? null : <NavButton key={n.id} n={n} current={current} onSelect={onSelect} />))}
     </aside>
   );
 }

@@ -15,6 +15,8 @@ pub struct ActiveEngagement {
     pub folder: String,
     #[ts(type = "number")]
     pub size_bytes: u64,
+    /// Number of scope rules, for the sidebar count.
+    pub rule_count: u32,
 }
 
 fn view(store: &Store, engagement: Engagement, edb: &EngagementDb) -> Result<ActiveEngagement> {
@@ -22,6 +24,7 @@ fn view(store: &Store, engagement: Engagement, edb: &EngagementDb) -> Result<Act
     Ok(ActiveEngagement {
         attestation: edb.attestation()?,
         size_bytes: folder_size(&folder),
+        rule_count: edb.scope_list()?.len() as u32,
         folder: folder.display().to_string(),
         engagement,
     })

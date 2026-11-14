@@ -72,3 +72,19 @@ export const scopeDelete = (id: number) => call<void>("scope_delete", { id });
 export const scopeTest = (input: string) => call<Decision>("scope_test", { input });
 export const scopeImport = (text: string, fileName: string, list: Effect) =>
   call<ImportResult>("scope_import", { text, fileName, list });
+
+// ---------- settings, keys, onboarding (SET, ONB) ----------
+import type { Settings } from "./bindings/Settings";
+import type { KeyStatus } from "./bindings/KeyStatus";
+import type { DataInfo } from "./bindings/DataInfo";
+export type { Settings, KeyStatus, DataInfo };
+export type { Density } from "./bindings/Density";
+
+export const settingsGet = () => call<Settings>("settings_get");
+export const settingsSet = (settings: Settings) => call<Settings>("settings_set", { settings });
+export const onboardingDone = () => call<boolean>("onboarding_done");
+export const onboardingComplete = () => call<void>("onboarding_complete");
+export const keysList = () => call<KeyStatus[]>("keys_list");
+export const keysSet = (source: string, value: string) => call<KeyStatus>("keys_set", { source, value });
+export const keysDelete = (source: string) => call<void>("keys_delete", { source });
+export const dataInfo = () => call<DataInfo>("data_info");

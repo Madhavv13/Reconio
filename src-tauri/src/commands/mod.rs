@@ -3,6 +3,7 @@
 
 pub mod engagement;
 pub mod scope;
+pub mod settings;
 pub mod tools;
 
 use crate::engagements::{EngagementDb, Store};

@@ -182,6 +182,29 @@ impl Store {
         Ok((self.get(id)?, edb))
     }
 
+    pub fn setting(&self, key: &str) -> AppResult<Option<String>> {
+        Ok(self.app.query_row("SELECT value FROM setting WHERE key = ?1", [key], |r| r.get(0)).optional()?)
+    }
+
+    pub fn set_setting(&self, key: &str, value: &str) -> AppResult<()> {
+        self.app.execute("INSERT OR REPLACE INTO setting (key, value) VALUES (?1, ?2)", [key, value])?;
+        Ok(())
+    }
+
+    /// App settings, with defaults for anything not saved yet.
+    pub fn settings(&self) -> AppResult<crate::settings::Settings> {
+        Ok(self
+            .setting("settings")?
+            .and_then(|v| serde_json::from_str(&v).ok())
+            .unwrap_or_default())
+    }
+
+    pub fn save_settings(&self, mut s: crate::settings::Settings) -> AppResult<crate::settings::Settings> {
+        s.validate()?;
+        self.set_setting("settings", &serde_json::to_string(&s).expect("settings serialize"))?;
+        Ok(s)
+    }
+
     pub fn last_engagement(&self) -> AppResult<Option<String>> {
         Ok(self.app.query_row("SELECT value FROM setting WHERE key = 'last_engagement'", [], |r| r.get(0)).optional()?)
     }
