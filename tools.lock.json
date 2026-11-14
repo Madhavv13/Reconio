@@ -1,0 +1,35 @@
+{
+  "$comment": "Pinned recon tools (PRD §16). SHA-256 values are of the release zip, copied from each release's checksums file on 2026-11-14. Change only through a reviewed bump.",
+  "tools": {
+    "subfinder": {
+      "version": "2.17.0",
+      "license": "MIT",
+      "assets": {
+        "x86_64-pc-windows-msvc": { "file": "subfinder_2.17.0_windows_amd64.zip", "sha256": "a3fd612928d591fb31c1e59a2e06055e364421ba32251e553073f5673a2d3103" },
+        "x86_64-apple-darwin": { "file": "subfinder_2.17.0_macOS_amd64.zip", "sha256": "75bf5990b409c6fd1116c81cd64fbdfd2cfd5bfb1f43542035b42344cb9fdffa" },
+        "aarch64-apple-darwin": { "file": "subfinder_2.17.0_macOS_arm64.zip", "sha256": "012d6ff91ef932ac6d1a321fb5735cf1412168d163e6adbc6cbe5fc42fe03c3b" },
+        "x86_64-unknown-linux-gnu": { "file": "subfinder_2.17.0_linux_amd64.zip", "sha256": "a39c3e5c7a26ef3c430915c4d6cbf7716a00f26769a75e9405aba796142eba37" }
+      }
+    },
+    "dnsx": {
+      "version": "1.3.1",
+      "license": "MIT",
+      "assets": {
+        "x86_64-pc-windows-msvc": { "file": "dnsx_1.3.1_windows_amd64.zip", "sha256": "112c2d62d67d26a1b940ed9d10d500d2aa1ee3e3e18393d181ac4969936b9d96" },
+        "x86_64-apple-darwin": { "file": "dnsx_1.3.1_macOS_amd64.zip", "sha256": "ade8207185467df3768f08993a1b0140cdec5b5d2b735dc2213b90de5a2d3a1c" },
+        "aarch64-apple-darwin": { "file": "dnsx_1.3.1_macOS_arm64.zip", "sha256": "6b1681e4168cf6175facea723e16fca4ca2f99c3f9f83dea8c2b79ed20a3f417" },
+        "x86_64-unknown-linux-gnu": { "file": "dnsx_1.3.1_linux_amd64.zip", "sha256": "438b964653056dd51dcfe614b1a16f8bced3cc48a1d27bc07cc6fdf2ef2a9533" }
+      }
+    },
+    "httpx": {
+      "version": "1.12.0",
+      "license": "MIT",
+      "assets": {
+        "x86_64-pc-windows-msvc": { "file": "httpx_1.12.0_windows_amd64.zip", "sha256": "14d8ccaa2d95ce9365162682f1a2ba3f14d2000bb4bfb0924af65ec5163ae021" },
+        "x86_64-apple-darwin": { "file": "httpx_1.12.0_macOS_amd64.zip", "sha256": "16760b5e2122b66f57b9fbdb59f564b1181507c093d6a36066f40e5de38e8fa9" },
+        "aarch64-apple-darwin": { "file": "httpx_1.12.0_macOS_arm64.zip", "sha256": "21d60328b383dba8a9fe249ac76b12edda4ec2e52a9cb21876c0a79123675569" },
+        "x86_64-unknown-linux-gnu": { "file": "httpx_1.12.0_linux_amd64.zip", "sha256": "9d8439e8b6c9aa7d1e2314817a392e00d5178da3af5652f7475f88868f418f76" }
+      }
+    }
+  }
+}

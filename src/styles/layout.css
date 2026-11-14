@@ -1,0 +1,70 @@
+/* App layout only, ported from mockup/assets/mock.css. Every value is a kit token; no visual components live here. */
+html,body{height:100%;margin:0}
+h1,h2,h3,p{margin:0}
+[hidden]{display:none!important}
+a{color:inherit;text-decoration:none}
+.link{color:var(--accent)}
+.link:hover{color:var(--accent-hi)}
+
+/* the space a floating bar and the pipeline bar take over scrolling content */
+.content{--top:calc(var(--size-toolbar) + var(--space-3) * 2);--bottom:calc(58px + var(--space-3) * 2)}
+.scroll{position:absolute;inset:0;overflow:auto}
+.top-space{height:var(--top)}
+.bottom-space{height:var(--bottom)}
+.content.no-pipe{--bottom:var(--space-6)}
+.with-sheet .page{padding-right:calc(var(--size-inspector) + var(--space-3) * 2)}
+
+/* a page of panels inside .content */
+.page{display:grid;gap:var(--space-6);padding:0 var(--space-6);align-content:start}
+.page-narrow{max-width:960px}
+.page-head{display:flex;align-items:flex-end;gap:var(--space-3)}
+.page-head .grow{display:grid;gap:var(--space-1)}
+.cols{display:grid;gap:var(--space-6);grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.cols-side{display:grid;gap:var(--space-6);grid-template-columns:minmax(0,1fr) 360px}
+.cols-nav{display:grid;gap:var(--space-6);grid-template-columns:200px minmax(0,1fr)}
+.cols,.cols-side,.cols-nav{align-items:start}
+@media (max-width:1440px){.cols-side{grid-template-columns:minmax(0,1fr) 320px}}
+
+/* table views */
+.table-view{--sticky-top:var(--top)}
+.table-view .dt td.host{max-width:360px}
+.inline-state td{padding:0!important;height:auto!important;white-space:normal;max-width:none}
+.new-rows{position:absolute;z-index:9;top:calc(var(--top) + 36px + var(--space-2));left:50%;transform:translateX(-50%)}
+.with-sheet .new-rows{left:calc((100% - var(--size-inspector) - var(--space-3)) / 2)}
+
+/* the floating bar's query field grows */
+.bar .search{flex:1 1 160px;min-width:0;max-width:560px}
+.bar .search input{font-family:var(--font-mono);font-size:13px}
+.bar-title{display:flex;align-items:center;gap:var(--space-2);padding-right:var(--space-2);white-space:nowrap;flex:none}
+
+/* the inspector sheet scrolls inside */
+.sheet{display:flex;flex-direction:column;gap:var(--space-4);overflow:auto}
+.sheet-head{display:flex;align-items:flex-start;gap:var(--space-2)}
+.sheet-head .grow{display:grid;gap:6px}
+.sheet .tabs{margin:0 calc(var(--space-5) * -1);padding:0 var(--space-3)}
+.sheet-section{display:grid;gap:var(--space-2)}
+
+/* pipeline bar sits centered; stage labels carry counts */
+.pipe-stage .mono{font-size:12px;color:var(--text-2)}
+.pipe-count span{white-space:nowrap}
+
+/* onboarding: no app shell, one centered column on the window ground */
+.onb{min-height:100%;display:grid;grid-template-rows:auto 1fr;gap:var(--space-6);padding:var(--space-6)}
+.onb-top{display:flex;align-items:center;gap:var(--space-4)}
+.onb-main{display:grid;align-content:start;justify-items:center;padding-top:var(--space-6)}
+.onb-card{width:640px;max-width:100%}
+.onb-foot{display:flex;align-items:center;gap:var(--space-2);padding:var(--space-3) var(--space-4);border-top:1px solid var(--line-1)}
+.welcome{display:grid;justify-items:center;gap:var(--space-4);text-align:center;padding-top:12vh}
+.welcome .state-text{max-width:52ch}
+
+/* log panel height on the pipeline screen */
+.log-box{height:300px}
+.log-wrap{position:relative}
+.log-wrap .btn{position:absolute;right:var(--space-4);bottom:var(--space-3)}
+
+/* export preview */
+.preview{max-height:420px;overflow:auto;white-space:pre;margin:0}
+
+
+@media (max-width:1100px){.cols,.cols-side{grid-template-columns:minmax(0,1fr)}}
+#root{height:100%}

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="10 10 108 108" width="108" height="108" role="img" aria-label="Reconio">
+  <!-- Mark only: derived from reconio-app-icon.svg by removing the plum tile,
+       grid and tile border. Same rings, gradient and geometry. For use at
+       16-32px on dark surfaces (sidebar, title bar, onboarding top bar). -->
+  <defs>
+    <linearGradient id="g" x1="22" y1="106" x2="106" y2="22" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF2E88"/>
+      <stop offset=".5" stop-color="#FF5A5F"/>
+      <stop offset="1" stop-color="#FFA566"/>
+    </linearGradient>
+    <mask id="cut" maskUnits="userSpaceOnUse" x="0" y="0" width="128" height="128">
+      <rect width="128" height="128" fill="#fff"/>
+      <path transform="translate(64 64) rotate(-32)" d="M-50 0A50 12.5 0 0 0 50 0" fill="none" stroke="#000" stroke-width="9"/>
+    </mask>
+  </defs>
+
+  <path transform="translate(64 64) rotate(-32)" d="M-50 0A50 13 0 0 1 50 0A50 10.5 0 0 0-50 0Z" fill="url(#g)" opacity=".5"/>
+  <g fill="none" stroke="url(#g)" stroke-width="6" stroke-linecap="round" mask="url(#cut)">
+    <circle cx="64" cy="64" r="34" pathLength="100" stroke-dasharray="30 7 22 7 26 8" transform="rotate(-25 64 64)"/>
+    <circle cx="64" cy="64" r="24" pathLength="100" stroke-dasharray="40 10 32 18" transform="rotate(70 64 64)"/>
+    <circle cx="64" cy="64" r="14" pathLength="100" stroke-dasharray="60 16 14 10" transform="rotate(200 64 64)"/>
+  </g>
+  <circle cx="64" cy="64" r="5.5" fill="url(#g)"/>
+  <path transform="translate(64 64) rotate(-32)" d="M-50 0A50 15.5 0 0 0 50 0A50 10 0 0 1-50 0Z" fill="url(#g)"/>
+</svg>

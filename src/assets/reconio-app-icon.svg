@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Reconio">
+  <!-- Variant 4 · App Icon / Favicon
+       Twist: a self-contained tile on the brand's dark plum with a faint recon
+       grid. Fewer, heavier rings so it still reads at 16-32px. -->
+  <defs>
+    <radialGradient id="bg" cx="40%" cy="35%" r="80%">
+      <stop offset="0" stop-color="#3A0E22"/>
+      <stop offset="1" stop-color="#14050C"/>
+    </radialGradient>
+    <linearGradient id="g" x1="22" y1="106" x2="106" y2="22" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF2E88"/>
+      <stop offset=".5" stop-color="#FF5A5F"/>
+      <stop offset="1" stop-color="#FFA566"/>
+    </linearGradient>
+    <pattern id="grid" width="16" height="16" patternUnits="userSpaceOnUse">
+      <path d="M16 0H0V16" fill="none" stroke="#FFFFFF" stroke-opacity=".05" stroke-width="1"/>
+    </pattern>
+    <clipPath id="tile"><rect width="128" height="128" rx="28"/></clipPath>
+    <mask id="cut" maskUnits="userSpaceOnUse" x="0" y="0" width="128" height="128">
+      <rect width="128" height="128" fill="#fff"/>
+      <path transform="translate(64 64) rotate(-32)" d="M-50 0A50 12.5 0 0 0 50 0" fill="none" stroke="#000" stroke-width="9"/>
+    </mask>
+  </defs>
+
+  <g clip-path="url(#tile)">
+    <rect width="128" height="128" fill="url(#bg)"/>
+    <rect width="128" height="128" fill="url(#grid)"/>
+  </g>
+  <rect x=".5" y=".5" width="127" height="127" rx="27.5" fill="none" stroke="#FF8A3D" stroke-opacity=".18"/>
+
+  <!-- back orbit -->
+  <path transform="translate(64 64) rotate(-32)" d="M-50 0A50 13 0 0 1 50 0A50 10.5 0 0 0-50 0Z" fill="url(#g)" opacity=".5"/>
+
+  <g fill="none" stroke="url(#g)" stroke-width="5" stroke-linecap="round" mask="url(#cut)">
+    <circle cx="64" cy="64" r="34" pathLength="100" stroke-dasharray="30 7 22 7 26 8" transform="rotate(-25 64 64)"/>
+    <circle cx="64" cy="64" r="24" pathLength="100" stroke-dasharray="40 10 32 18" transform="rotate(70 64 64)"/>
+    <circle cx="64" cy="64" r="14" pathLength="100" stroke-dasharray="60 16 14 10" transform="rotate(200 64 64)"/>
+  </g>
+  <circle cx="64" cy="64" r="5" fill="url(#g)"/>
+
+  <!-- front orbit -->
+  <path transform="translate(64 64) rotate(-32)" d="M-50 0A50 15.5 0 0 0 50 0A50 10 0 0 1-50 0Z" fill="url(#g)"/>
+</svg>

@@ -1,0 +1,106 @@
+/* Reconio Liquid Glass — generated from tokens.json */
+:root, [data-theme="dark"] {
+  --ink-0: #0A0807;
+  --ink-1: #100D0B;
+  --ink-2: #171310;
+  --ink-3: #211B16;
+  --ink-4: #2B231D;
+  --ground-light: #2A1A0E;
+  --field: #080605;
+  --glass-top: #17120FE6;
+  --glass-bottom: #110D0BDB;
+  --glass-thick-top: #1F1914E8;
+  --glass-thick-bottom: #17120EE0;
+  --tint-selected: #FF8A3D24;
+  --tint-hover: #FFFFFF0A;
+  --tint-press: #FFFFFF14;
+  --edge-top: #FFFFFF1A;
+  --edge-top-strong: #FFFFFF38;
+  --edge-bottom: #0000003D;
+  --edge-ring: #FFFFFF0D;
+  --rim-hi: #FFFFFF52;
+  --rim-mid: #FFFFFF1F;
+  --line-1: #FFFFFF0D;
+  --line-2: #FFFFFF17;
+  --line-3: #FFFFFF29;
+  --line-control: #8F7F70;
+  --text-1: #F8F2EC;
+  --text-2: #CBBFB4;
+  --text-3: #A29488;
+  --text-off: #6E6257;
+  --on-accent: #1A0B03;
+  --accent: #FF8A3D;
+  --accent-hi: #FFA566;
+  --accent-lo: #B8541A;
+  --focus-ring: #FFB27A;
+  --status-2xx: #34D399;
+  --status-3xx: #38BDF8;
+  --status-4xx: #FACC15;
+  --status-5xx: #F87171;
+  --status-err: #A78BFA;
+  --success: var(--status-2xx);
+  --warning: var(--status-4xx);
+  --danger: var(--status-5xx);
+  --info: var(--status-3xx);
+  --sev-critical: var(--status-5xx);
+  --sev-high: #FF7F66;
+  --sev-medium: var(--status-4xx);
+  --sev-low: var(--status-3xx);
+  --sev-info: var(--text-2);
+  --shadow-float: 0 10px 24px #0000004D, 0 1px 2px #00000066;
+  --shadow-lift: 0 2px 6px #0000004D, 0 1px 2px #00000066;
+  --shadow-sheet: 0 18px 40px #00000073, 0 4px 10px #0000004D;
+  --shadow-press: 0 1px 2px #00000066;
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 48px;
+  --radius-xs: 5px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 9999px;
+  --size-control: 34px;
+  --size-control-sm: 28px;
+  --size-control-lg: 42px;
+  --size-row: 36px;
+  --size-row-compact: 28px;
+  --size-sidebar: 248px;
+  --size-toolbar: 52px;
+  --size-inspector: 380px;
+  --size-icon: 16px;
+  --blur-regular: 14px;
+  --blur-thick: 22px;
+  --sat-regular: 120%;
+  --bright-regular: 0.7;
+  --dur-instant: 80ms;
+  --dur-fast: 140ms;
+  --dur-base: 220ms;
+  --dur-slow: 340ms;
+  --dur-count: 700ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --font-sans: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+}
+.readout { font-family: var(--font-sans); font-size: 28px; line-height: 32px; font-weight: 600; letter-spacing: -0.02em; }
+.title-lg { font-family: var(--font-sans); font-size: 20px; line-height: 28px; font-weight: 600; letter-spacing: -0.01em; }
+.title { font-family: var(--font-sans); font-size: 16px; line-height: 24px; font-weight: 600; letter-spacing: -0.005em; }
+.section { font-family: var(--font-sans); font-size: 14px; line-height: 20px; font-weight: 600; }
+.body { font-family: var(--font-sans); font-size: 14px; line-height: 20px; font-weight: 400; }
+.body-strong { font-family: var(--font-sans); font-size: 14px; line-height: 20px; font-weight: 500; }
+.label { font-family: var(--font-sans); font-size: 13px; line-height: 18px; font-weight: 500; }
+.col-head { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 500; }
+.meta { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 400; }
+.data { font-family: var(--font-mono); font-size: 13px; line-height: 20px; font-weight: 400; }
+.data-sm { font-family: var(--font-mono); font-size: 12px; line-height: 16px; font-weight: 400; }
+.log { font-family: var(--font-mono); font-size: 12px; line-height: 18px; font-weight: 400; }
+.code-chip { font-family: var(--font-mono); font-size: 12px; line-height: 16px; font-weight: 500; }
