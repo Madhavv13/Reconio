@@ -1,36 +1,78 @@
-import { useState, type ReactElement } from "react";
-import { Wrench } from "lucide-react";
+import { useEffect, useState, type ReactElement } from "react";
+import { Briefcase, Shield, Wrench } from "lucide-react";
 import { Sidebar, type NavItem } from "./shell/Sidebar";
-import { ToolCheck } from "./screens/tools/ToolCheck";
+import { Screen } from "./shell/Screen";
 import { ErrorBoundary } from "./shell/ErrorBoundary";
+import { EngagementProvider, useEngagement } from "./state/engagement";
+import { ToolCheck } from "./screens/tools/ToolCheck";
+import { NewEngagement } from "./screens/engagement-new/NewEngagement";
+import { ScopeScreen } from "./screens/scope/ScopeScreen";
+import { EngagementSettings } from "./screens/engagement-settings/EngagementSettings";
 
-const NAV: NavItem[] = [{ id: "tools", label: "Tool check", icon: Wrench }];
+type ScreenId = "scope" | "settings" | "tools" | "new";
 
-const SCREENS: Record<string, { title: string; render: () => ReactElement }> = {
-  tools: { title: "Tool check", render: () => <ToolCheck /> },
-};
+const NAV: NavItem[] = [
+  { group: "Engagement" },
+  { id: "scope", label: "Scope", icon: Shield },
+  { id: "settings", label: "Engagement settings", icon: Briefcase },
+  { group: "App" },
+  { id: "tools", label: "Tool check", icon: Wrench },
+];
 
-// App shell (NAV-01): floating sidebar, one content panel, a floating bar over the content.
-export default function App() {
-  const [screen, setScreen] = useState("tools");
-  const s = SCREENS[screen];
+function Shell() {
+  const { loaded, list, active, open } = useEngagement();
+  const [screen, setScreen] = useState<ScreenId>("scope");
+
+  // If the last engagement is gone (deleted), open the most recent remaining one.
+  useEffect(() => {
+    if (loaded && !active && list && list.length > 0) open(list[0].id);
+  }, [loaded, active, list, open]);
+
+  if (!loaded) return null;
+
+  // First run: no engagement yet, so creating one is the only thing to do.
+  const firstRun = !active && (list?.length ?? 0) === 0;
+  const current: ScreenId = firstRun && screen !== "tools" ? "new" : screen;
+
+  const screens: Record<ScreenId, () => ReactElement> = {
+    new: () => (
+      <Screen title="New engagement">
+        <NewEngagement onCreated={() => setScreen("scope")} onCancel={firstRun ? undefined : () => setScreen("scope")} />
+      </Screen>
+    ),
+    scope: () => <ScopeScreen />,
+    settings: () => <EngagementSettings />,
+    tools: () => (
+      <Screen title="Tool check">
+        <ToolCheck />
+      </Screen>
+    ),
+  };
+
   return (
     <div className="app">
       <div className="app-side">
-        <Sidebar items={NAV} current={screen} onSelect={setScreen} />
+        <Sidebar
+          items={firstRun ? NAV.filter((n) => "group" in n ? n.group === "App" : n.id === "tools") : NAV}
+          current={current}
+          onSelect={(id) => setScreen(id as ScreenId)}
+          onNewEngagement={() => setScreen("new")}
+        />
       </div>
       <main className="app-main">
         <div className="content no-pipe">
-          <div className="scroll">
-            <div className="top-space" />
-            <ErrorBoundary key={screen}>{s.render()}</ErrorBoundary>
-            <div className="bottom-space" />
-          </div>
-          <div className="bar float-top">
-            <div className="bar-title"><span className="section">{s.title}</span></div>
-          </div>
+          <ErrorBoundary key={current}>{screens[current]()}</ErrorBoundary>
         </div>
       </main>
     </div>
+  );
+}
+
+// App shell (NAV-01): floating sidebar, one content panel, a floating bar over the content.
+export default function App() {
+  return (
+    <EngagementProvider>
+      <Shell />
+    </EngagementProvider>
   );
 }

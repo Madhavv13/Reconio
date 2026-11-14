@@ -144,10 +144,13 @@ pub async fn batch_lines(
     mut emit: impl FnMut(Vec<ToolLine>),
 ) {
     let mut buf = Vec::new();
-    let mut tick = tokio::time::interval(interval);
+    // First tick after one interval, not immediately, so a flush never fires at time zero.
+    let mut tick = tokio::time::interval_at(tokio::time::Instant::now() + interval, interval);
     tick.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
     loop {
         tokio::select! {
+            // Drain waiting lines before checking the timer.
+            biased;
             line = rx.recv() => match line {
                 Some(l) => {
                     buf.push(l);
