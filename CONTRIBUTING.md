@@ -18,10 +18,10 @@ Run these before you open a pull request. CI runs them too.
 ```sh
 npm run build          # TypeScript check + Vite build
 npm run test:rust      # Rust tests, including the scope regression suite; regenerates TS bindings
-npm run test:a11y      # WCAG 2.2 AA, 200% zoom and keyboard paths for every screen
+npm run test:a11y      # accessibility check: axe-core, 200% zoom and keyboard paths for every screen
 ```
 
-- **New screen?** Add a scenario for it in [scripts/a11y.mjs](scripts/a11y.mjs) (and the mock answers it needs in [tests/a11y/mock.ts](tests/a11y/mock.ts)). Follow the rules in [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md).
+- **New screen?** Add a scenario for it in [scripts/a11y.mjs](scripts/a11y.mjs) (and the mock answers it needs in [tests/a11y/mock.ts](tests/a11y/mock.ts)).
 - **Changed scope behaviour?** Add the case to [src-tauri/tests/fixtures/scope_cases.json](src-tauri/tests/fixtures/scope_cases.json). The regression suite must keep passing.
 - **Changed a Rust type used by the UI?** Commit the regenerated files in `src/ipc/bindings`.
 - **New screen in the README?** Add its screenshot name to [scripts/readme-assets.mjs](scripts/readme-assets.mjs), then run `npm run test:a11y && npm run readme:assets`.

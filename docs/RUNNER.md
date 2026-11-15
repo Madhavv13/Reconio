@@ -2,7 +2,7 @@
 
 How to run Reconio on your Windows PC. Do the steps in order. Each step says what to type and what you should see.
 
-> Applies to Module 1 (engagements and scope). Updated at the end of every module. See also the [README](../README.md) and [accessibility rules](ACCESSIBILITY.md).
+> Applies to Module 1 (engagements and scope). Updated at the end of every module. See also the [README](../README.md).
 
 ---
 
@@ -208,13 +208,13 @@ Then run the accessibility check (Microsoft Edge must be installed; it is on eve
 npm run test:a11y
 ```
 
-It opens every screen and dialog in a hidden Edge window, at full size and at 200% zoom, and checks them against WCAG 2.2 AA. The last line should be:
+It opens every screen and dialog in a hidden Edge window, at full size and at 200% zoom, and checks them for accessibility problems. The last line should be:
 
 ```
 No accessibility problems found. Screenshots: ...\Reconio\test-results\a11y
 ```
 
-The screenshots folder shows every screen it checked. If it lists problems, copy the output into a bug report. See [ACCESSIBILITY.md](ACCESSIBILITY.md) for what it checks and the rules every screen follows.
+The screenshots folder shows every screen it checked. If it lists problems, copy the output into a bug report.
 
 ### Try zoom in the app
 

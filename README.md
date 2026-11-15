@@ -8,7 +8,6 @@
   <img src="https://img.shields.io/badge/status-pre--alpha-FACC15?style=flat-square" alt="Status: pre-alpha">
   <img src="https://img.shields.io/badge/platform-Windows-0078D4?style=flat-square&logo=windows&logoColor=white" alt="Platform: Windows">
   <img src="https://img.shields.io/badge/macOS%20%C2%B7%20Linux-planned-2B231D?style=flat-square" alt="macOS and Linux planned">
-  <img src="https://img.shields.io/badge/WCAG-2.2%20AA-34D399?style=flat-square" alt="WCAG 2.2 AA">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-proprietary-A29488?style=flat-square" alt="License: proprietary"></a>
 </p>
 
@@ -56,7 +55,6 @@
 | ✅ | **API keys in the OS keychain** | Keys for passive sources live in Windows Credential Manager, macOS Keychain or Linux Secret Service, never in a database or log. The UI only ever sees `ghp_••••3f2a`. |
 | ✅ | **Onboarding and Settings** | A 4-step first run (welcome, tool check, API keys, first engagement). Settings has API keys, tools (threads, rate limit, timeout, all validated), resolvers, performance, data, privacy and about. |
 | ✅ | **Local-first** | Reconio makes no network calls of its own. Crash reports and usage statistics are opt-in and off by default. |
-| ✅ | **Accessible** | Built to WCAG 2.2 AA, with keyboard paths for everything, 200% zoom and reduced motion. Every screen is checked automatically ([details](docs/ACCESSIBILITY.md)). |
 | 🔜 | **Pipeline** | Chunked runs with four scope checks, stop / pause / resume, crash recovery and a run log (Module 2). |
 | 🔜 | **Results** | Subdomains, resolved and live hosts in virtualized tables with a filter language and an inspector (Module 3). |
 | 🔜 | **Export and command palette** | Host lists and presets for your next tool, plus a keyboard command palette (Module 4). |
@@ -148,7 +146,7 @@ A step-by-step walkthrough, from first launch to building an installer, is in **
 | `npm run tauri dev` | Run the app in development |
 | `npm run fetch-tools` | Download and verify the pinned tools into `src-tauri/binaries/`. Fails on any checksum mismatch |
 | `npm run test:rust` | Rust tests (scope engine, supervisor, Job Object kill, storage). Also regenerates the TS bindings |
-| `npm run test:a11y` | Every screen in Edge with axe-core (WCAG 2.2 AA), at 200% zoom, with keyboard paths. Must pass before a commit |
+| `npm run test:a11y` | Accessibility check of every screen in Edge (axe-core, 200% zoom, keyboard paths). Must pass before a commit |
 | `npm run sync-design` | Copy design tokens, components and the logo from the design system (runs before `dev` and `build`) |
 | `npm run readme:assets` | Re-render the README banner and copy fresh screenshots from the accessibility run |
 | `npm run tauri build` | Release build plus `.msi` and NSIS installers |
@@ -183,7 +181,7 @@ Reconio/
 Every module has to pass all of these before it is committed:
 
 - **87 Rust tests**: 81 unit tests plus the **scope regression suite**, which covers 35 real-world scope decisions, 7 paste-parsing cases and randomized property checks with [proptest](https://github.com/proptest-rs/proptest). A failure in the scope suite blocks a release.
-- **Accessibility gate**: `npm run test:a11y` renders the real React app in Edge, walks every screen and dialog at 1440 × 900 and at 200% zoom, and fails on any axe-core WCAG 2.2 A/AA violation, clipped content, or a broken keyboard path.
+- **Accessibility gate**: `npm run test:a11y` renders the real React app in Edge, walks every screen and dialog at 1440 × 900 and at 200% zoom, and fails on any axe-core violation, clipped content, or a broken keyboard path.
 - **CI** runs the build, the Rust tests and the accessibility gate on Windows for every push and pull request.
 
 ## Roadmap

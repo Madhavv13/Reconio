@@ -42,5 +42,3 @@ Dark only for v1. Colour is never the only signal: every status also has a word 
 
 - The name is **Reconio**: one word, capital R, the rest lowercase.
 - The logo is the app icon in [`public/reconio-app-icon.svg`](../public/reconio-app-icon.svg) and the tile-less mark in [`src/assets/reconio-mark.svg`](../src/assets/reconio-mark.svg). Use them as supplied and never redraw them.
-
-Accessibility rules that apply to every screen are in [ACCESSIBILITY.md](ACCESSIBILITY.md).

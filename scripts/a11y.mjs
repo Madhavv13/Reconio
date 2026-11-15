@@ -1,4 +1,4 @@
-// Accessibility check (WCAG 2.2 AA through WCAG2ICT; rules in docs/ACCESSIBILITY.md).
+// Accessibility check (WCAG 2.2 AA through WCAG2ICT; rules in ../../legal/01-accessibility-wcag.md).
 //
 // Renders the real React app against a fake Rust core (tests/a11y/mock.ts) in Microsoft Edge,
 // walks every screen and dialog, and fails if any of these are found:
