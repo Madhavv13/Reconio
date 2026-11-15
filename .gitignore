@@ -29,3 +29,6 @@ src-tauri/binaries/*
 
 # Accessibility check screenshots (npm run test:a11y)
 test-results/
+
+# Local design-tool state
+.impeccable/
