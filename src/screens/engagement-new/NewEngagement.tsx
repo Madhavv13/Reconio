@@ -51,7 +51,7 @@ export function NewEngagement({ onCreated, onCancel, onBack, footerExtra }: Prop
   const card = (
     <section className={onboarding ? "panel onb-card" : "panel"} style={onboarding ? { width: 820 } : undefined}>
       <div className="panel-head">
-        <span className="panel-title">{onboarding ? "First engagement" : "New engagement"}</span>
+        <h2 className="panel-title">{onboarding ? "First engagement" : "New engagement"}</h2>
         {!onboarding && <span className="meta muted">Creates its own database. Results are never shared between engagements.</span>}
       </div>
       <div className="panel-body stack" style={{ gap: "var(--space-5)" }}>

@@ -1,4 +1,9 @@
 import { useEffect, useId, useRef, type ReactNode } from "react";
+import { restoreFocus } from "./a11y";
+
+/** Everything Tab can reach inside the dialog. Disabled and hidden controls are skipped. */
+const FOCUSABLE =
+  "input:not([disabled]):not([type=hidden]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]), [href], [tabindex]:not([tabindex='-1'])";
 
 type Props = {
   title: string;
@@ -24,12 +29,13 @@ export function Dialog({ title, onClose, children, actions, width, alert }: Prop
     const opener = document.activeElement as HTMLElement | null;
     // Focus the field the user came to fill in: [autofocus], then a text box, then the first button.
     const q = (sel: string) => ref.current?.querySelector<HTMLElement>(sel);
-    const first = q("[autofocus]") ?? q("textarea") ?? q("input:not([type=checkbox]):not([type=radio])") ?? q("button:not([disabled])");
+    const first =
+      q("[autofocus]") ?? q("textarea:not([disabled])") ?? q("input:not([type=checkbox]):not([type=radio]):not([disabled])") ?? q("button:not([disabled])");
     first?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") close.current();
       if (e.key === "Tab" && ref.current) {
-        const items = [...ref.current.querySelectorAll<HTMLElement>("input, textarea, select, button:not([disabled]), [tabindex='0']")];
+        const items = [...ref.current.querySelectorAll<HTMLElement>(FOCUSABLE)];
         if (!items.length) return;
         const [a, z] = [items[0], items[items.length - 1]];
         if (e.shiftKey && document.activeElement === a) {
@@ -44,7 +50,8 @@ export function Dialog({ title, onClose, children, actions, width, alert }: Prop
     document.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("keydown", onKey);
-      opener?.focus();
+      // 2.4.3: back to the opener, or to the screen title if the opener is gone.
+      restoreFocus(opener);
     };
   }, []);
 

@@ -8,6 +8,7 @@ import {
 } from "../../ipc";
 import { KIND_LABEL, fmt, fmtTime, plural } from "../../ui/format";
 import { Segmented } from "../../ui/Segmented";
+import { announce, keepFocus } from "../../ui/a11y";
 import { AddRuleDialog } from "./AddRuleDialog";
 import { BulkPasteDialog } from "./BulkPasteDialog";
 
@@ -46,7 +47,7 @@ function TestResult({ input, d }: { input: string; d: Decision }) {
     text = <>No in-scope rule matches <span className="mono">{input.trim()}</span>.</>;
   }
   return (
-    <div className="well row wrap" style={{ fontFamily: "var(--font-sans)" }} aria-live="polite">
+    <div className="well row wrap" style={{ fontFamily: "var(--font-sans)" }}>
       {tag}
       <span className="meta muted">{text}</span>
     </div>
@@ -103,7 +104,9 @@ export function ScopeScreen() {
   const applied = async (added: number) => {
     setDialog(null);
     setImported(undefined);
-    setNotice(added ? `${plural(added, "rule")} added.` : "No new rules. Every rule was already saved.");
+    const msg = added ? `${plural(added, "rule")} added.` : "No new rules. Every rule was already saved.";
+    setNotice(msg);
+    announce(msg);
     await Promise.all([load(), refresh()]);
   };
 
@@ -112,7 +115,10 @@ export function ScopeScreen() {
     try {
       await scopeDelete(r.id);
       setNotice(`${r.normalized} removed.`);
+      announce(`${r.normalized} removed.`);
       await Promise.all([load(), refresh()]);
+      // The row and its delete button are gone; keep focus on the screen (2.4.3).
+      keepFocus();
     } catch (e) {
       setError((e as AppError).message);
     }
@@ -148,9 +154,9 @@ export function ScopeScreen() {
       <div className="page">
         {error && <div className="callout callout-err" role="alert"><span>{error}</span></div>}
         {notice && (
-          <div className="callout callout-ok banner" role="status">
+          <div className="callout callout-ok banner">
             <span>{notice}</span>
-            <div className="callout-actions"><button type="button" className="btn btn-sm btn-plain" onClick={() => setNotice(null)}>Dismiss</button></div>
+            <div className="callout-actions"><button type="button" className="btn btn-sm btn-plain" onClick={() => { setNotice(null); keepFocus(); }}>Dismiss</button></div>
           </div>
         )}
         {view?.block && view.rules.length > 0 && (
@@ -174,14 +180,14 @@ export function ScopeScreen() {
             ) : (
               <>
                 <section className="panel">
-                  <div className="panel-head"><span className="panel-title">In scope</span><span className="count">{fmt(ins.length)}</span></div>
+                  <div className="panel-head"><h2 className="panel-title">In scope</h2><span className="count">{fmt(ins.length)}</span></div>
                   {ins.length ? ins.map((r, i) => <RuleRow key={r.id} rule={r} last={i === ins.length - 1} onDelete={() => remove(r)} />) : (
                     <div className="state"><div className="state-text">No in-scope rules. A run cannot start until you add one.</div></div>
                   )}
                 </section>
                 <section className="panel">
                   <div className="panel-head">
-                    <span className="panel-title">Out of scope</span><span className="count">{fmt(outs.length)}</span>
+                    <h2 className="panel-title">Out of scope</h2><span className="count">{fmt(outs.length)}</span>
                     <span className="meta muted" style={{ marginLeft: "var(--space-2)" }}>Out of scope always wins</span>
                   </div>
                   {outs.length ? outs.map((r, i) => <RuleRow key={r.id} rule={r} last={i === outs.length - 1} onDelete={() => remove(r)} />) : (
@@ -194,20 +200,23 @@ export function ScopeScreen() {
 
           <div className="stack" style={{ gap: "var(--space-6)", alignContent: "start" }}>
             <section className="panel">
-              <div className="panel-head"><span className="panel-title">Test a host</span></div>
+              <div className="panel-head"><h2 className="panel-title">Test a host</h2></div>
               <div className="panel-body stack">
                 <label className="search">
                   <Search {...ic} />
-                  <input value={test} onChange={(e) => setTest(e.target.value)} placeholder="api.acme.example" aria-label="Host, URL or IP to test" spellCheck={false} style={{ fontFamily: "var(--font-mono)", fontSize: 13 }} />
+                  <input value={test} onChange={(e) => setTest(e.target.value)} placeholder="api.acme.example" aria-label="Host, URL or IP to test" aria-invalid={testError ? true : undefined} aria-describedby={testError ? "scope-test-error" : undefined} spellCheck={false} style={{ fontFamily: "var(--font-mono)", fontSize: 13 }} />
                 </label>
-                {decision && <TestResult input={test} d={decision} />}
-                {testError && <span className="field-error">{testError}</span>}
+                {/* Always mounted, so screen readers read each new answer (4.1.3). */}
+                <div aria-live="polite" className="stack" style={{ gap: 0 }}>
+                  {decision && <TestResult input={test} d={decision} />}
+                  {testError && <span className="field-error" id="scope-test-error">{testError}</span>}
+                </div>
                 <p className="meta faint">Uses the same matcher as the pipeline. IP rules apply when the host has resolved IPs.</p>
               </div>
             </section>
 
             <section className="panel">
-              <div className="panel-head"><span className="panel-title">Root domains</span><span className="count">{fmt(view?.roots.length ?? 0)}</span></div>
+              <div className="panel-head"><h2 className="panel-title">Root domains</h2><span className="count">{fmt(view?.roots.length ?? 0)}</span></div>
               <div className="panel-body stack">
                 {view?.roots.length ? (
                   <div className="well" style={{ display: "grid", gap: 4 }}>
@@ -221,7 +230,7 @@ export function ScopeScreen() {
             </section>
 
             <section className="panel">
-              <div className="panel-head"><span className="panel-title">Authorization</span></div>
+              <div className="panel-head"><h2 className="panel-title">Authorization</h2></div>
               <div className="panel-body stack">
                 {att ? (
                   <dl className="kv">
@@ -237,7 +246,7 @@ export function ScopeScreen() {
             </section>
 
             <section className="panel">
-              <div className="panel-head"><span className="panel-title">Import from a file</span></div>
+              <div className="panel-head"><h2 className="panel-title">Import from a file</h2></div>
               <div className="panel-body stack">
                 <div className="field">
                   <span className="field-label">A .txt file goes to</span>
@@ -255,7 +264,7 @@ export function ScopeScreen() {
                   <span className="label">Drop a .txt or .csv file</span>
                   <span className="meta faint">Same rules as bulk paste. A .csv can say per row with an effect column, or HackerOne's eligible_for_submission.</span>
                   <button type="button" className="btn btn-sm" onClick={() => file.current?.click()}>Choose file</button>
-                  <input ref={file} type="file" accept=".txt,.csv,text/plain,text/csv" hidden onChange={(e) => onFile(e.target.files?.[0])} />
+                  <input ref={file} type="file" accept=".txt,.csv,text/plain,text/csv" hidden aria-hidden="true" tabIndex={-1} onChange={(e) => onFile(e.target.files?.[0])} />
                 </div>
               </div>
             </section>

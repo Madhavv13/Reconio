@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { AlertCircle, ArrowLeft, ArrowRight, Check, CheckCircle2, Loader2, RefreshCw } from "lucide-react";
 import mark from "../../assets/reconio-mark.svg";
 import icon from "../../assets/reconio-app-icon.svg";
@@ -52,9 +52,9 @@ function ToolCheckStep({ back, next }: { back: () => void; next: () => void }) {
   return (
     <section className="panel onb-card">
       <div className="panel-head">
-        <span className="panel-title">Tool check</span>
+        <h2 className="panel-title">Tool check</h2>
         <span className="spacer" />
-        <button type="button" className="btn btn-sm" onClick={recheck} disabled={checking}><RefreshCw {...ic} />Check again</button>
+        <button type="button" className="btn btn-sm" onClick={() => !checking && recheck()} aria-disabled={checking || undefined}><RefreshCw {...ic} />Check again</button>
       </div>
       {(status ?? (["subfinder", "dnsx", "httpx"] as const).map((tool) => ({ tool, state: null, detected_version: null, expected_version: null, path: "", problem: null }))).map((t) => (
         <div className="set-row" key={t.tool}>
@@ -92,7 +92,7 @@ function ToolCheckStep({ back, next }: { back: () => void; next: () => void }) {
 function KeysStep({ back, next }: { back: () => void; next: () => void }) {
   return (
     <section className="panel onb-card" style={{ width: 760 }}>
-      <div className="panel-head"><span className="panel-title">API keys for passive sources</span><span className="meta muted">Optional</span></div>
+      <div className="panel-head"><h2 className="panel-title">API keys for passive sources</h2><span className="meta muted">Optional</span></div>
       <ApiKeys />
       <div className="onb-foot">
         <button type="button" className="btn btn-plain" onClick={back}><ArrowLeft {...ic} />Back</button>
@@ -108,6 +108,19 @@ function KeysStep({ back, next }: { back: () => void; next: () => void }) {
 export function Onboarding({ onDone }: { onDone: () => void }) {
   const { list } = useEngagement();
   const [step, setStep] = useState(0);
+  const main = useRef<HTMLElement>(null);
+
+  // The button that changed the step is gone, so focus would fall to the page body. Move it to
+  // the new step's heading instead (2.4.3), unless the step focused a field itself.
+  useEffect(() => {
+    const a = document.activeElement;
+    if (a && a !== document.body && a.isConnected) return;
+    const h = main.current?.querySelector<HTMLElement>("h1, h2");
+    if (h) {
+      h.tabIndex = -1;
+      h.focus();
+    }
+  }, [step]);
 
   const finish = async () => {
     await onboardingComplete();
@@ -123,7 +136,7 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
         <span className="spacer" />
         <span className="meta muted">Step {step + 1} of 4</span>
       </div>
-      <main className="onb-main">
+      <main className="onb-main" ref={main}>
         {step === 0 && <Welcome next={() => setStep(1)} />}
         {step === 1 && <ToolCheckStep back={() => setStep(0)} next={() => setStep(2)} />}
         {step === 2 && <KeysStep back={() => setStep(1)} next={() => setStep(3)} />}

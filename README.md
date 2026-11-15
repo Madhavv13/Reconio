@@ -2,7 +2,7 @@
 
 Desktop recon for authorized security testing: subfinder → dnsx → httpx per engagement, with scope enforced between every stage. Tauri v2, React + TypeScript, Rust core, SQLite.
 
-Requirements live in [../docs/PRD.md](../docs/PRD.md); the build plan and module progress in [../docs/MVP.md](../docs/MVP.md); full run, test and build instructions in [../docs/Runner.md](../docs/Runner.md). UI is built only from [../ui-design-system-glass](../ui-design-system-glass/design-system.md).
+Requirements live in [../docs/PRD.md](../docs/PRD.md); the build plan and module progress in [../docs/MVP.md](../docs/MVP.md); full run, test and build instructions in [../docs/Runner.md](../docs/Runner.md). UI is built only from [../ui-design-system-glass](../ui-design-system-glass/design-system.md), and every screen meets WCAG 2.2 AA: see the build rules in [../legal/01-accessibility-wcag.md](../legal/01-accessibility-wcag.md).
 
 ## Setup
 
@@ -21,6 +21,7 @@ npm run tauri dev
 | `npm run fetch-tools` | Download and verify the pinned tools into `src-tauri/binaries/` (fails on any checksum mismatch) |
 | `npm run sync-design` | Copy tokens, components and logo from the design folders (runs before `dev` and `build`) |
 | `npm run test:rust` | Rust tests: tool check, supervisor, Job Object kill, and regenerates TS bindings in `src/ipc/bindings` |
+| `npm run test:a11y` | Accessibility check: every screen in Edge with axe-core (WCAG 2.2 AA), 200% zoom layout and keyboard paths. Must pass before a commit |
 | `npm run tauri build` | Release app plus `.msi` and NSIS installers |
 
 ## Layout

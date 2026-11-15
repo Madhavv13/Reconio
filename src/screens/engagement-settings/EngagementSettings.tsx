@@ -6,6 +6,7 @@ import { useEngagement } from "../../state/engagement";
 import type { AppError } from "../../ipc";
 import { Dialog } from "../../ui/Dialog";
 import { fmtBytes, fmtTime } from "../../ui/format";
+import { announce, keepFocus } from "../../ui/a11y";
 
 const ic = { className: "ic", strokeWidth: 1.5, "aria-hidden": true } as const;
 
@@ -40,6 +41,7 @@ export function EngagementSettings() {
     try {
       await update(name, client || null, notes || null);
       setSaved(true);
+      announce("Engagement saved.");
     } catch (err) {
       setError(err as AppError);
     } finally {
@@ -49,8 +51,13 @@ export function EngagementSettings() {
 
   const confirmDelete = async () => {
     setDeleteError(null);
+    const deleted = e.name;
     try {
       await remove(typed);
+      // Close the dialog; otherwise it reopens for the engagement that takes this one's place.
+      setDeleting(false);
+      announce(`${deleted} deleted.`);
+      keepFocus();
     } catch (err) {
       setDeleteError((err as AppError).message);
     }
@@ -62,12 +69,12 @@ export function EngagementSettings() {
     <Screen title="Engagement settings" meta={e.name}>
       <div className="page page-narrow">
         <section className="panel">
-          <div className="panel-head"><span className="panel-title">Details</span></div>
+          <div className="panel-head"><h2 className="panel-title">Details</h2></div>
           <div className="panel-body stack">
             <div className="cols" style={{ gap: "var(--space-4)" }}>
               <div className="field">
                 <label className="field-label" htmlFor="s-name">Name</label>
-                <input className="input" id="s-name" value={name} onChange={(x) => { setName(x.target.value); setSaved(false); }} aria-invalid={error ? true : undefined} aria-describedby="s-name-h" />
+                <input className="input" id="s-name" value={name} onChange={(x) => { setName(x.target.value); setSaved(false); }} aria-invalid={error ? true : undefined} aria-describedby={error ? "s-name-h" : undefined} />
                 {error && <span className="field-error" id="s-name-h">{error.message}</span>}
               </div>
               <div className="field">
@@ -80,16 +87,17 @@ export function EngagementSettings() {
               <textarea className="textarea" id="s-notes" rows={3} value={notes} onChange={(x) => { setNotes(x.target.value); setSaved(false); }} placeholder="Program rules, rate limits, contacts" style={{ fontFamily: "var(--font-sans)", fontSize: 14 }} />
             </div>
             <div className="row">
-              {saved && !dirty && <span className="meta muted" role="status">Saved.</span>}
+              {saved && !dirty && <span className="meta muted">Saved.</span>}
               <span className="spacer" />
-              <button type="button" className="btn btn-primary" disabled={!dirty || saving} onClick={save}>{saving ? "Saving" : "Save changes"}</button>
+              {/* aria-disabled, not disabled: a button that disables itself on save would drop focus. */}
+              <button type="button" className="btn btn-primary" aria-disabled={!dirty || saving || undefined} onClick={() => dirty && !saving && save()}>{saving ? "Saving" : "Save changes"}</button>
             </div>
           </div>
         </section>
 
         <div className="cols">
           <section className="panel">
-            <div className="panel-head"><span className="panel-title">Authorization</span></div>
+            <div className="panel-head"><h2 className="panel-title">Authorization</h2></div>
             <div className="panel-body">
               {att ? (
                 <dl className="kv">
@@ -103,7 +111,7 @@ export function EngagementSettings() {
             </div>
           </section>
           <section className="panel">
-            <div className="panel-head"><span className="panel-title">Storage</span></div>
+            <div className="panel-head"><h2 className="panel-title">Storage</h2></div>
             <div className="panel-body stack">
               <dl className="kv">
                 <dt>Folder</dt><dd style={{ wordBreak: "break-all" }}>{active.folder}</dd>
@@ -118,7 +126,7 @@ export function EngagementSettings() {
         </div>
 
         <section className="panel">
-          <div className="panel-head"><span className="panel-title">Engagement actions</span></div>
+          <div className="panel-head"><h2 className="panel-title">Engagement actions</h2></div>
           <div className="set-row">
             <div className="set-text">
               <span className="body-strong">Delete</span>

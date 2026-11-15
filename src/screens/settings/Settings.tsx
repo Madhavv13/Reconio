@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 import { FolderOpen, Gauge, Info, Key, Lock, RefreshCw, Server, Wrench, Folder, type LucideIcon } from "lucide-react";
 import { getVersion } from "@tauri-apps/api/app";
 import { revealItemInDir } from "@tauri-apps/plugin-opener";
@@ -7,6 +7,8 @@ import { Screen } from "../../shell/Screen";
 import { dataInfo, settingsGet, settingsSet, type AppError, type DataInfo, type Settings as S } from "../../ipc";
 import { Segmented } from "../../ui/Segmented";
 import { fmtBytes } from "../../ui/format";
+import { announce } from "../../ui/a11y";
+import { TableWrap } from "../../ui/TableWrap";
 import { ApiKeys } from "./ApiKeys";
 import { useTools } from "./useTools";
 
@@ -25,14 +27,22 @@ const SECTIONS: { id: Section; label: string; icon: LucideIcon }[] = [
 
 const STATE_WORD = { ok: "Bundled, verified", missing: "Missing", tampered: "Does not match the build", version_mismatch: "Wrong version", unreadable: "Cannot be read" } as const;
 
-/** A number field that saves when it loses focus or on Enter, and shows the core's validation error. */
-function NumberField({ label, value, min, max, width = 84, onCommit }: { label: string; value: number; min: number; max: number; width?: number; onCommit: (v: number) => void }) {
+/** Id of the Settings error message; a field the core rejected points to it (3.3.1). */
+const ERROR_ID = "settings-error";
+
+/** A number field that saves when it loses focus or on Enter. If the core rejects the value,
+ *  the field is marked invalid and described by the error message. */
+function NumberField({ label, value, min, max, width = 84, onCommit }: { label: string; value: number; min: number; max: number; width?: number; onCommit: (v: number) => Promise<boolean> }) {
   const [v, setV] = useState(String(value));
+  const [invalid, setInvalid] = useState(false);
   useEffect(() => setV(String(value)), [value]);
-  const commit = () => {
+  const commit = async () => {
     const n = Number(v);
-    if (v.trim() !== "" && Number.isInteger(n) && n !== value) onCommit(n);
-    else setV(String(value));
+    if (v.trim() !== "" && Number.isInteger(n) && n !== value) setInvalid(!(await onCommit(n)));
+    else {
+      setV(String(value));
+      setInvalid(false);
+    }
   };
   return (
     <input
@@ -42,6 +52,8 @@ function NumberField({ label, value, min, max, width = 84, onCommit }: { label: 
       max={max}
       value={v}
       aria-label={label}
+      aria-invalid={invalid || undefined}
+      aria-describedby={invalid ? ERROR_ID : undefined}
       onChange={(e) => setV(e.target.value)}
       onBlur={commit}
       onKeyDown={(e) => e.key === "Enter" && (e.target as HTMLInputElement).blur()}
@@ -53,7 +65,7 @@ function NumberField({ label, value, min, max, width = 84, onCommit }: { label: 
 function Panel({ title, actions, children }: { title: string; actions?: ReactNode; children: ReactNode }) {
   return (
     <section className="panel">
-      <div className="panel-head"><span className="panel-title">{title}</span><span className="spacer" />{actions}</div>
+      <div className="panel-head"><h2 className="panel-title">{title}</h2><span className="spacer" />{actions}</div>
       {children}
     </section>
   );
@@ -68,12 +80,13 @@ function SetRow({ title, hint, children }: { title: string; hint: string; childr
   );
 }
 
-function ToolsSection({ s, save }: { s: S; save: (n: S) => void }) {
+function ToolsSection({ s, save }: { s: S; save: (n: S) => Promise<boolean> }) {
   const { status, checking, recheck } = useTools();
   const set = (tool: keyof S["tools"], key: keyof S["tools"]["dnsx"], v: number) =>
     save({ ...s, tools: { ...s.tools, [tool]: { ...s.tools[tool], [key]: v } } });
   return (
-    <Panel title="Tools" actions={<button type="button" className="btn btn-sm" onClick={recheck} disabled={checking}><RefreshCw {...ic} />{checking ? "Checking" : "Check tools"}</button>}>
+    <Panel title="Tools" actions={<button type="button" className="btn btn-sm" onClick={() => !checking && recheck()} aria-disabled={checking || undefined}><RefreshCw {...ic} />{checking ? "Checking" : "Check tools"}</button>}>
+      <TableWrap label="Tools">
       <table className="dt">
         <thead><tr><th>Tool</th><th>Version</th><th>Binary</th><th>Threads</th><th>Rate limit /s</th><th>Timeout s</th></tr></thead>
         <tbody>
@@ -100,6 +113,7 @@ function ToolsSection({ s, save }: { s: S; save: (n: S) => void }) {
           })}
         </tbody>
       </table>
+      </TableWrap>
       <div className="panel-body stack">
         {status?.filter((x) => x.problem).map((x) => <span key={x.tool} className="field-error">{x.problem}</span>)}
         <p className="meta faint">Limits: subfinder 1 to 100 threads, 0 to 1,000 per second (0 means no limit). dnsx 1 to 500 threads and 1 to 5,000 per second. httpx 1 to 300 threads, 1 to 2,000 per second, 1 to 60 s timeout.</p>
@@ -110,20 +124,21 @@ function ToolsSection({ s, save }: { s: S; save: (n: S) => void }) {
 }
 
 function ResolversSection({ s, save }: { s: S; save: (n: S) => Promise<boolean> }) {
+  const box = useRef<HTMLTextAreaElement>(null);
   const [text, setText] = useState(s.resolvers.join("\n"));
   useEffect(() => setText(s.resolvers.join("\n")), [s.resolvers]);
   const dirty = text.trim() !== s.resolvers.join("\n");
   return (
-    <Panel title="Resolvers" actions={<button type="button" className="btn btn-sm btn-primary" disabled={!dirty} onClick={() => save({ ...s, resolvers: text.split(/[\n,]/) })}>Save</button>}>
+    <Panel title="Resolvers" actions={<button type="button" className="btn btn-sm btn-primary" disabled={!dirty} onClick={async () => { if (await save({ ...s, resolvers: text.split(/[\n,]/) })) box.current?.focus(); }}>Save</button>}>
       <div className="panel-body stack">
-        <textarea className="textarea" rows={8} aria-label="Resolvers, one per line" spellCheck={false} value={text} onChange={(e) => setText(e.target.value)} />
+        <textarea ref={box} className="textarea" rows={8} aria-label="Resolvers, one per line" spellCheck={false} value={text} onChange={(e) => setText(e.target.value)} />
         <p className="meta faint">One IP address per line, optionally with a port. Runs use this saved list. A run cannot start with an empty list.</p>
       </div>
     </Panel>
   );
 }
 
-function PerformanceSection({ s, save }: { s: S; save: (n: S) => void }) {
+function PerformanceSection({ s, save }: { s: S; save: (n: S) => Promise<boolean> }) {
   const p = s.performance;
   const set = (patch: Partial<S["performance"]>) => save({ ...s, performance: { ...p, ...patch } });
   return (
@@ -164,6 +179,7 @@ function DataSection() {
           <span className="field-hint">Every engagement has its own folder and database here.</span>
         </div>
       </div>
+      <TableWrap label="Storage per engagement">
       <table className="dt">
         <thead><tr><th>Engagement</th><th>State</th><th className="num">Size</th></tr></thead>
         <tbody>
@@ -172,11 +188,12 @@ function DataSection() {
           ))}
         </tbody>
       </table>
+      </TableWrap>
     </Panel>
   );
 }
 
-function PrivacySection({ s, save }: { s: S; save: (n: S) => void }) {
+function PrivacySection({ s, save }: { s: S; save: (n: S) => Promise<boolean> }) {
   const p = s.privacy;
   const set = (patch: Partial<S["privacy"]>) => save({ ...s, privacy: { ...p, ...patch } });
   return (
@@ -192,12 +209,14 @@ function PrivacySection({ s, save }: { s: S; save: (n: S) => void }) {
       </SetRow>
       <div className="panel-body stack" style={{ borderTop: "1px solid var(--line-1)" }}>
         <span className="section">Network destinations other than recon traffic</span>
+        <TableWrap label="Network destinations">
         <table className="dt compact">
           <thead><tr><th>Destination</th><th>Why</th><th>When</th></tr></thead>
           <tbody>
             <tr><td>Passive sources you enable in subfinder</td><td>They receive the root domains being enumerated</td><td>During runs</td></tr>
           </tbody>
         </table>
+        </TableWrap>
         <p className="meta faint">This build contacts no update or crash-report server. The switches above take effect when those services ship.</p>
       </div>
     </Panel>
@@ -252,6 +271,7 @@ export function Settings() {
     try {
       setS(await settingsSet(next));
       setSaved(true);
+      announce("Saved.");
       return true;
     } catch (e) {
       setError((e as AppError).message);
@@ -277,8 +297,8 @@ export function Settings() {
             ))}
           </nav>
           <div className="stack" style={{ gap: "var(--space-4)" }}>
-            {error && <div className="callout callout-err" role="alert"><span>{error}</span></div>}
-            {section === "keys" && <section className="panel"><div className="panel-head"><span className="panel-title">API keys</span></div><ApiKeys /></section>}
+            {error && <div className="callout callout-err" role="alert" id={ERROR_ID}><span>{error}</span></div>}
+            {section === "keys" && <section className="panel"><div className="panel-head"><h2 className="panel-title">API keys</h2></div><ApiKeys /></section>}
             {s && section === "tools" && <ToolsSection s={s} save={save} />}
             {s && section === "resolvers" && <ResolversSection s={s} save={save} />}
             {s && section === "performance" && <PerformanceSection s={s} save={save} />}

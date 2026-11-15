@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { scopeParsePreview, type Effect, type Hint, type HintAction, type Preview, type PreviewRule } from "../../ipc";
 import { KIND_LABEL, fmt, plural } from "../../ui/format";
 
@@ -50,6 +50,8 @@ function HintLine({ hint, onAction }: { hint: Hint; onAction: (a: HintAction) =>
       {hint.action && (
         <button type="button" className="btn btn-sm" onClick={() => onAction(hint.action!)}>
           {hint.action.label}
+          {/* 2.4.6: "Add it" alone does not say what is added. */}
+          <span className="sr-only">: {hint.action.pattern}</span>
         </button>
       )}
     </span>
@@ -71,9 +73,19 @@ export function ScopePreview({ preview, onAction, footnote }: Props) {
   const nIn = preview.rules.filter((r) => r.effect === "in" && !r.existing).length;
   const nOut = preview.rules.filter((r) => r.effect === "out" && !r.existing).length;
   const nExisting = preview.rules.filter((r) => r.existing).length;
+  const box = useRef<HTMLDivElement>(null);
+  // A used hint disappears with its button; keep focus in the preview (2.4.3), which matters
+  // most inside a dialog, where focus must not leave it.
+  const act = (a: HintAction, r: PreviewRule) => {
+    onAction(a, r);
+    setTimeout(() => {
+      const f = document.activeElement;
+      if (!f || f === document.body || !f.isConnected) box.current?.focus();
+    }, 260);
+  };
 
   return (
-    <div className="stack" style={{ gap: "var(--space-2)" }}>
+    <div className="stack" style={{ gap: "var(--space-2)" }} ref={box} tabIndex={-1} role="group" aria-label="Parsed rules">
       <div className="well" style={{ padding: 0, fontFamily: "var(--font-sans)", maxHeight: 360, overflow: "auto" }}>
         {rows.map((r, i) => (
           <div key={`${r.effect}${r.kind}${r.normalized}`} className={`scope-row${r.effect === "out" ? " out" : ""}`} style={{ height: "auto", minHeight: "var(--size-row)", flexWrap: "wrap", padding: "6px var(--space-3)", borderBottom: i === rows.length - 1 && !preview.invalid.length ? 0 : undefined }}>
@@ -82,7 +94,7 @@ export function ScopePreview({ preview, onAction, footnote }: Props) {
             {r.effect === "out" ? <span className="tag tag-out">Out of scope</span> : <span className="tag tag-scope">In scope</span>}
             {r.existing && <span className="meta faint">Already saved</span>}
             {hintsFor(r).map((h) => (
-              <HintLine key={h.code} hint={h} onAction={(a) => onAction(a, r)} />
+              <HintLine key={h.code} hint={h} onAction={(a) => act(a, r)} />
             ))}
           </div>
         ))}

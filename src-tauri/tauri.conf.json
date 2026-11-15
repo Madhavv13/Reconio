@@ -15,8 +15,9 @@
         "title": "Reconio",
         "width": 1440,
         "height": 900,
-        "minWidth": 1280,
-        "minHeight": 720,
+        "minWidth": 640,
+        "minHeight": 480,
+        "zoomHotkeysEnabled": true,
         "backgroundColor": "#0A0807"
       }
     ],

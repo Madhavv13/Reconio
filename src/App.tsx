@@ -50,7 +50,7 @@ function Shell() {
     ? []
     : [
         { group: "Engagement" },
-        { id: "scope", label: "Scope", icon: Shield, count: active ? fmt(active.rule_count) : undefined },
+        { id: "scope", label: "Scope", icon: Shield, count: active ? fmt(active.rule_count) : undefined, countLabel: active?.rule_count === 1 ? "rule" : "rules" },
         { id: "engagement", label: "Engagement settings", icon: Briefcase },
       ];
   const bottom: NavItem[] = [{ id: "settings", label: "Settings", icon: SettingsIcon }];

@@ -11,6 +11,9 @@ import "./styles/design/tokens.css";
 import "./styles/design/components.css";
 import "./styles/layout.css";
 import App from "./App";
+import { mountAnnouncer } from "./ui/a11y";
+
+mountAnnouncer();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
