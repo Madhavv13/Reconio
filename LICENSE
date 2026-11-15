@@ -1,0 +1,23 @@
+Reconio — Proprietary Software License
+
+Copyright (c) 2026 Madhavv13. All rights reserved.
+
+This repository and everything in it (source code, binaries, documentation, designs, images
+and other assets, together "the Software") are the confidential and proprietary property of
+the copyright holder.
+
+No licence or right is granted to any person to use, copy, modify, merge, publish, distribute,
+sublicense, sell, reverse engineer or create derivative works of the Software, in whole or in
+part, except with the prior written permission of the copyright holder.
+
+Access to this repository does not grant any such licence. If you have been given access, you
+may view and run the Software only for the purpose for which access was granted, and you must
+not share it with anyone else.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR ITS USE.
+
+Third-party components bundled with or used by the Software (including subfinder, dnsx and
+httpx by ProjectDiscovery, MIT licence) remain under their own licences.

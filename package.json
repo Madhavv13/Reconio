@@ -2,6 +2,12 @@
   "name": "reconio",
   "private": true,
   "version": "0.1.0",
+  "description": "Desktop recon for authorized security testing: subfinder, dnsx and httpx per engagement, with scope enforced between every stage.",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Madhavv13/Reconio.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,7 +19,8 @@
     "sync-design": "node scripts/sync-design.mjs",
     "fetch-tools": "node scripts/fetch-tools.mjs",
     "test:rust": "cd src-tauri && cargo test",
-    "test:a11y": "node scripts/a11y.mjs"
+    "test:a11y": "node scripts/a11y.mjs",
+    "readme:assets": "node scripts/readme-assets.mjs"
   },
   "dependencies": {
     "@fontsource/jetbrains-mono": "^5.3.0",

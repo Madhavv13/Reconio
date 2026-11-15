@@ -1,0 +1,35 @@
+name: Feature request
+description: Suggest a feature or a change to how Reconio works
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do in your recon workflow, and what gets in the way?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you'd like
+      description: How Reconio could solve it. Mockups or examples from other tools are welcome.
+    validations:
+      required: true
+  - type: input
+    id: requirement
+    attributes:
+      label: Requirement ID (if known)
+      description: The PRD requirement this relates to, for example SCOPE-04 or RUN-12.
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module
+      options:
+        - Engagements and scope (Module 1)
+        - Pipeline engine (Module 2)
+        - Results (Module 3)
+        - Export, settings, onboarding (Module 4)
+        - Hardening and installers (Module 5)
+        - Proxy and repeater (Phase 2)
+        - Not sure

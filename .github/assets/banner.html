@@ -1,0 +1,109 @@
+<!doctype html>
+<!-- README banner. Rendered to banner.png by `npm run readme:assets`; edit this file, never the PNG.
+     Colours are the design tokens from src/styles/design/tokens.css; the logo is the real app icon. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reconio banner</title>
+<style>
+  @font-face { font-family: "Manrope"; font-weight: 500; src: url("../../node_modules/@fontsource/manrope/files/manrope-latin-500-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Manrope"; font-weight: 700; src: url("../../node_modules/@fontsource/manrope/files/manrope-latin-700-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Manrope"; font-weight: 800; src: url("../../node_modules/@fontsource/manrope/files/manrope-latin-800-normal.woff2") format("woff2"); }
+  @font-face { font-family: "JetBrains Mono"; font-weight: 400; src: url("../../node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "JetBrains Mono"; font-weight: 500; src: url("../../node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-500-normal.woff2") format("woff2"); }
+
+  :root {
+    --ink-0: #0A0807; --ink-1: #100D0B; --ink-2: #171310; --ink-3: #211B16; --ink-4: #2B231D;
+    --line-1: #FFFFFF0D; --line-2: #FFFFFF17;
+    --text-1: #F8F2EC; --text-2: #CBBFB4; --text-3: #A29488;
+    --accent: #FF8A3D; --accent-hi: #FFA566;
+    --ok: #34D399; --warn: #FACC15;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: transparent; }
+  body { padding: 0; font-family: "Manrope", sans-serif; -webkit-font-smoothing: antialiased; }
+
+  #banner {
+    position: relative; overflow: hidden;
+    width: 1280px; height: 400px; border-radius: 28px;
+    background:
+      radial-gradient(900px 420px at 18% 0%, #FF8A3D1F, transparent 62%),
+      radial-gradient(700px 380px at 100% 100%, #FF2E8812, transparent 60%),
+      var(--ink-0);
+    border: 1px solid var(--line-2);
+  }
+  /* faint recon grid, fading out to the left */
+  #banner::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--line-1) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-1) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: linear-gradient(90deg, transparent 20%, #000 75%);
+  }
+
+  .brand { position: absolute; left: 72px; top: 72px; display: flex; align-items: center; gap: 28px; }
+  .brand img { width: 112px; height: 112px; filter: drop-shadow(0 18px 40px #FF5A5F33); }
+  .word { font-weight: 800; font-size: 88px; letter-spacing: -0.035em; color: var(--text-1); line-height: 1; }
+  .tag { position: absolute; left: 72px; top: 222px; font-size: 27px; font-weight: 500; color: var(--text-2); letter-spacing: -0.01em; }
+  .tag b { color: var(--text-1); font-weight: 700; }
+  .meta { position: absolute; left: 72px; bottom: 56px; display: flex; gap: 10px; }
+  .chip {
+    font: 500 15px "JetBrains Mono", monospace; color: var(--text-2);
+    padding: 7px 14px; border-radius: 9999px; background: var(--ink-2); border: 1px solid var(--line-2);
+  }
+  .chip i { font-style: normal; color: var(--accent); margin-right: 8px; }
+
+  /* the pipeline, as it reads in the app: stage cards with scope checks between them */
+  .pipe { position: absolute; right: 64px; top: 50%; transform: translateY(-50%); width: 420px; display: flex; flex-direction: column; gap: 0; }
+  .stage {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px; border-radius: 20px; background: #171310E6; border: 1px solid var(--line-2);
+    box-shadow: 0 18px 40px #00000073;
+  }
+  .stage .n { font: 500 13px "JetBrains Mono", monospace; color: var(--text-3); }
+  .stage .t { font: 500 20px "JetBrains Mono", monospace; color: var(--text-1); }
+  .stage .d { font-size: 14px; color: var(--text-3); margin-top: 2px; }
+  .stage .s { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; color: var(--text-2); }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px #FF8A3D26; }
+  .stage.on { border-color: #FF8A3D66; }
+  .check {
+    align-self: center; display: flex; align-items: center; gap: 8px; height: 40px;
+    font: 500 13px "JetBrains Mono", monospace; color: var(--text-3);
+  }
+  .check::before { content: ""; width: 1px; height: 40px; background: linear-gradient(var(--line-2), #FF8A3D80, var(--line-2)); margin-right: 6px; }
+  .check b { color: var(--accent-hi); font-weight: 500; }
+</style>
+</head>
+<body>
+  <div id="banner" role="img" aria-label="Reconio: desktop recon for authorized security testing">
+    <div class="brand">
+      <img src="../../public/reconio-app-icon.svg" alt="">
+      <div class="word">Reconio</div>
+    </div>
+    <p class="tag"><b>Desktop recon</b> for authorized security testing.</p>
+    <div class="meta">
+      <span class="chip"><i>●</i>scope-enforced</span>
+      <span class="chip"><i>●</i>local-first</span>
+      <span class="chip"><i>●</i>Tauri 2 · Rust · React</span>
+    </div>
+
+    <div class="pipe" aria-hidden="true">
+      <div class="stage on">
+        <div><div class="t">subfinder</div><div class="d">passive subdomains</div></div>
+        <div class="s"><span class="dot"></span>stage 1</div>
+      </div>
+      <div class="check"><b>scope</b> check</div>
+      <div class="stage">
+        <div><div class="t">dnsx</div><div class="d">resolve to IPs</div></div>
+        <div class="s">stage 2</div>
+      </div>
+      <div class="check"><b>scope</b> check</div>
+      <div class="stage">
+        <div><div class="t">httpx</div><div class="d">probe live hosts</div></div>
+        <div class="s">stage 3</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

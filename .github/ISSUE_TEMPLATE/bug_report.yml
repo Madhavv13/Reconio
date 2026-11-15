@@ -1,0 +1,68 @@
+name: Bug report
+description: Something in Reconio doesn't work as expected
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. **Security problems go through [SECURITY.md](../blob/main/SECURITY.md), not here.**
+        Never paste API keys or real client scope into an issue.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open Scope for acme.example
+        2. Paste ...
+        3. See ...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Onboarding
+        - Engagements
+        - Scope
+        - Settings
+        - Tools / tool check
+        - Pipeline
+        - Results
+        - Export
+        - Accessibility
+        - Build / install
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Reconio version or commit
+      placeholder: 0.1.0 or 346d59d
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Windows 11
+        - Windows 10
+        - macOS
+        - Linux
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs, error text or screenshots
+      description: Output from the terminal, or the red "This screen stopped working" box.
+      render: text

@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["**.md", "docs/**", ".github/assets/**", ".github/ISSUE_TEMPLATE/**", "LICENSE"]
+  pull_request:
+    paths-ignore: ["**.md", "docs/**", ".github/assets/**", ".github/ISSUE_TEMPLATE/**", "LICENSE"]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    name: Build, test and accessibility (Windows)
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install packages
+        run: npm ci
+
+      - name: Fetch and verify pinned tools
+        run: npm run fetch-tools
+
+      - name: Type-check and build the UI
+        run: npm run build
+
+      - name: Rust tests
+        run: npm run test:rust
+
+      - name: Generated bindings are committed
+        shell: bash
+        run: |
+          if [ -n "$(git status --porcelain -- src/ipc/bindings)" ]; then
+            git status --porcelain -- src/ipc/bindings
+            echo "::error::src/ipc/bindings changed after the Rust tests. Run npm run test:rust and commit the result."
+            exit 1
+          fi
+
+      - name: Accessibility gate (WCAG 2.2 AA)
+        run: npm run test:a11y
+
+      - name: Upload accessibility screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a11y-screenshots
+          path: test-results/a11y
+          retention-days: 7
